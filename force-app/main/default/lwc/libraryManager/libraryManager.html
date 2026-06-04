@@ -1,0 +1,106 @@
+<template>
+    <lightning-card title="Library Manager" icon-name="custom:custom55">
+       <div slot="actions">
+            <lightning-button label="New Author" onclick={handleNewAuthor} class="slds-var-m-right_x-small"></lightning-button>
+            <lightning-button label="New Book" variant="brand" onclick={handleNewBook} class="slds-var-m-right_x-small"></lightning-button>
+
+            <lightning-button label="Export" variant="success" onclick={handleExportCSV}></lightning-button>
+        </div>
+       
+        <div class="slds-var-m-around_medium">
+            
+            <template if:true={isBookModalOpen}>
+    <section role="dialog" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container" style="max-width: 40rem;">
+            <header class="slds-modal__header">
+                <h2 class="slds-text-heading_medium">Add New Book</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                <lightning-record-edit-form object-api-name="Book__c" onsuccess={handleSuccess}>
+                    <lightning-input-field field-name="Name"></lightning-input-field>
+                    <lightning-input-field field-name="Author__c"></lightning-input-field>
+                    <div class="slds-m-top_medium slds-float_right">
+                    <lightning-button label="Cancel" onclick={closeBookModal} class="slds-m-right_small"></lightning-button>
+                    <lightning-button type="submit" label="Save" variant="brand"></lightning-button>
+                    </div>
+                </lightning-record-edit-form>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+
+<template if:true={isAuthorModalOpen}>
+    <section role="dialog" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container" style="max-width: 40rem;">
+            <header class="slds-modal__header">
+                <h2 class="slds-text-heading_medium">Add New Author</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                <lightning-record-edit-form object-api-name="Author__c" onsuccess={handleSuccess}>
+                    <lightning-input-field field-name="Name"></lightning-input-field>
+                    <div class="slds-m-top_medium slds-float_right">
+                        <lightning-button label="Cancel" onclick={closeAuthorModal} class="slds-m-right_small"></lightning-button>
+                        <lightning-button type="submit" label="Save" variant="brand"></lightning-button>
+                    </div>
+                </lightning-record-edit-form>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+
+<template if:true={isEditBookModalOpen}>
+    <section role="dialog" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container" style="max-width: 40rem;">
+            <header class="slds-modal__header">
+                <h2 class="slds-text-heading_medium">Update Book Info</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                <lightning-record-edit-form object-api-name="Book__c" record-id={selectedBookId} onsuccess={handleSuccess}>
+                    <lightning-input-field field-name="Name"></lightning-input-field>
+                    <lightning-input-field field-name="Author__c"></lightning-input-field>
+                    <div class="slds-m-top_medium slds-float_right">
+                        <lightning-button label="Cancel" onclick={closeEditBookModal} class="slds-m-right_small"></lightning-button>
+                        <lightning-button type="submit" label="Save Changes" variant="brand"></lightning-button>
+                    </div>
+                </lightning-record-edit-form>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+
+            <lightning-input 
+                type="search" 
+                label="Search Books or Authors" 
+                value={searchKey} 
+                onchange={handleSearchChange}
+                placeholder="Type title or author..."
+                class="slds-var-m-bottom_small">
+            </lightning-input>
+
+            <template if:true={books}>
+                <lightning-datatable
+                    key-field="Id"
+                    data={books}
+                    columns={columns}
+                    hide-checkbox-column
+                    onrowaction={handleRowAction}
+                    sorted-by={sortBy}
+                    sorted-direction={sortDirection}
+                    onsort={handleSort}
+                >
+                    
+                </lightning-datatable>
+            </template>
+
+
+            
+            <template if:true={error}>
+                <div class="slds-text-color_error">Error loading library data.</div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
