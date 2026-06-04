@@ -1,5 +1,3 @@
-# Salesforce DX Project: Library Management System
-
 ## Overview
 A library system built on **Salesforce Experience Cloud** for external community users.
 
